@@ -74,7 +74,7 @@ export const App: React.FC = () => {
       });
   };
 
-  // перекл. COMPLETED
+  // перекл.
   const toggleTodo = (todo: Todo) => {
     hideError();
     setLoadingIds(prev => [...prev, todo.id]);

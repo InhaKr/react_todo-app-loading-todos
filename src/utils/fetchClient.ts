@@ -49,18 +49,20 @@ function request<T>(
 export const client = {
   get: <T>(url: string) => request<T>(url),
 
-  post<T>(url: string, data: any): Promise<void | T> {
-    const options = {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-      },
-    };
+  // post<T>(url: string, data: any): Promise<void | T> {
+  //   const options = {
+  //     method: 'POST',
+  //     body: JSON.stringify(data),
+  //     headers: {
+  //       'Content-Type': 'application/json; charset=utf-8',
+  //     },
+  //   };
 
-    return fetch(BASE_URL + url, options).then(handleResponse);
-    //  request<T>(url, 'POST', data),
-  },
+  //   return wait(100)
+  //     .then(() => fetch(BASE_URL + url, options))
+  //     .then(handleResponse);
+  // },
+  post: <T>(url: string, data: any) => request<T>(url, 'POST', data),
 
   patch: <T>(url: string, data: any) => request<T>(url, 'PATCH', data),
   delete: (url: string) => request(url, 'DELETE'),

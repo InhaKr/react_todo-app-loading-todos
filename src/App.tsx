@@ -14,10 +14,6 @@ import {
 type Filter = 'all' | 'active' | 'completed';
 
 export const App: React.FC = () => {
-  if (!USER_ID) {
-    return <UserWarning />;
-  }
-
   const [todos, setTodos] = useState<Todo[]>([]);
   const [title, setTitle] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
@@ -26,15 +22,6 @@ export const App: React.FC = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // 1️⃣ Загружаем существующие задачи с сервера при монтировании
-  useEffect(() => {
-    hideError();
-    getTodos()
-      .then(setTodos)
-      .catch(() => showError('Unable to load todos'));
-  }, []);
-
-  // ERROR HANDLING
   const showError = (message: string) => {
     setError(message);
     setTimeout(() => setError(''), 3000);
@@ -42,14 +29,24 @@ export const App: React.FC = () => {
 
   const hideError = () => setError('');
 
-  // ADD TODO
+  // Загрузка задачи с сервера
+  useEffect(() => {
+    hideError();
+    getTodos()
+      .then(setTodos)
+      .catch(() => showError('Unable to load todos'));
+  }, []);
+
+  // добавим Todo
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     hideError();
 
     const trimmed = title.trim();
+
     if (!trimmed) {
       showError('Title should not be empty');
+
       return;
     }
 
@@ -62,7 +59,7 @@ export const App: React.FC = () => {
       .catch(() => showError('Unable to add a todo'));
   };
 
-  // DELETE TODO
+  // уд.TODO
   const handleDelete = (id: number) => {
     hideError();
     setLoadingIds(prev => [...prev, id]);
@@ -77,7 +74,7 @@ export const App: React.FC = () => {
       });
   };
 
-  // TOGGLE COMPLETED
+  // перекл. COMPLETED
   const toggleTodo = (todo: Todo) => {
     hideError();
     setLoadingIds(prev => [...prev, todo.id]);
@@ -92,14 +89,24 @@ export const App: React.FC = () => {
       });
   };
 
-  // FILTER
+  // фильтр
   const visibleTodos = todos.filter(todo => {
-    if (filter === 'active') return !todo.completed;
-    if (filter === 'completed') return todo.completed;
+    if (filter === 'active') {
+      return !todo.completed;
+    }
+
+    if (filter === 'completed') {
+      return todo.completed;
+    }
+
     return true;
   });
 
   const hasTodos = todos.length > 0;
+
+  if (!USER_ID) {
+    return <UserWarning />;
+  }
 
   return (
     <div className="todoapp">
@@ -159,7 +166,10 @@ export const App: React.FC = () => {
                       data-cy="TodoLoader"
                       className="modal overlay is-active"
                     >
-                      <div className="modal-background has-background-white-ter" />
+                      <div
+                        className="modal-background
+                        has-background-white-ter"
+                      />
                       <div className="loader" />
                     </div>
                   )}

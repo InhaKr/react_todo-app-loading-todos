@@ -7,20 +7,12 @@ export const getTodos = () => {
   return client.get<Todo[]>(`/todos?userId=${USER_ID}`);
 };
 
-// Add more methods here/Каждый todo — это объект примерно такого вида:
-// {
-//   "id": 1,
-//   "userId": USER_ID,
-//   "title": "Buy milk",
-//   "completed": false
-// }
-
-export const createTodo = ({
-  title,
-  userId = USER_ID,
-  completed = false,
-}: Omit<Todo, 'id'>) => {
-  return client.post<Todo>(`/todos`, { userId, title, completed });
+export const createTodo = ({ title }: { title: string }) => {
+  return client.post<Todo>(`/todos`, {
+    userId: USER_ID,
+    title,
+    completed: false,
+  });
 };
 
 export const deleteTodo = (todoId: number) => {
